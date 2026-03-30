@@ -1,0 +1,9 @@
+internal/
+CASE-STUDY.md
+.env
+.env.local
+.env.production
+*.log
+__pycache__/
+node_modules/
+.DS_Store

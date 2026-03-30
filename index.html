@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinAgent — Trustless AI Financial Advisor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0f0f0f;
+      color: #f5f5f5;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      min-height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      border-bottom: 1px solid #222;
+    }
+
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #00ff88;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { color: #f5f5f5; }
+
+    nav a {
+      color: #666;
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: #f5f5f5; }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #0f1f15;
+      border: 1px solid #00ff8833;
+      color: #00ff88;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 2px;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.15;
+      max-width: 800px;
+      margin-bottom: 1.5rem;
+      letter-spacing: -1px;
+    }
+
+    h1 .accent { color: #00ff88; }
+
+    .subtitle {
+      color: #aaa;
+      font-size: 1rem;
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 4rem;
+    }
+
+    .btn {
+      padding: 0.7rem 1.6rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 2px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #00ff88;
+      color: #0f0f0f;
+      border: 1px solid #00ff88;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover { background: #00cc6a; border-color: #00cc6a; }
+
+    .btn-ghost {
+      background: transparent;
+      color: #f5f5f5;
+      border: 1px solid #333;
+    }
+
+    .btn-ghost:hover { border-color: #666; }
+
+    /* Terminal */
+    .terminal {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto 5rem;
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      background: #222;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.red { background: #ff5f56; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green { background: #27c93f; }
+
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      font-size: 0.7rem;
+      color: #666;
+    }
+
+    .terminal-body {
+      padding: 1.5rem;
+      font-size: 0.8rem;
+      line-height: 1.8;
+      min-height: 220px;
+    }
+
+    .t-prompt { color: #00ff88; }
+    .t-cmd { color: #f5f5f5; }
+    .t-out { color: #aaa; }
+    .t-val { color: #00ff88; }
+    .t-warn { color: #ffbd2e; }
+    .t-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: #00ff88;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Stats */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: #222;
+      border: 1px solid #222;
+      margin: 0 3rem 5rem;
+    }
+
+    .stat {
+      background: #0f0f0f;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f5f5f5;
+    }
+
+    .stat-value.live { color: #00ff88; }
+
+    /* How it works */
+    .section {
+      padding: 4rem 3rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #00ff88;
+      margin-bottom: 1rem;
+    }
+
+    .section h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 3rem;
+      letter-spacing: -0.5px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .step {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      padding: 1.5rem;
+      border: 1px solid #222;
+      border-radius: 4px;
+      transition: border-color 0.2s;
+    }
+
+    .step:hover { border-color: #333; }
+
+    .step-num {
+      font-size: 0.7rem;
+      color: #00ff88;
+      letter-spacing: 1px;
+      min-width: 28px;
+      padding-top: 2px;
+    }
+
+    .step-content h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      color: #f5f5f5;
+    }
+
+    .step-content p {
+      font-size: 0.8rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* Trust stack */
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: #222;
+      border: 1px solid #222;
+      margin-top: 2rem;
+    }
+
+    .trust-card {
+      background: #0f0f0f;
+      padding: 1.5rem;
+    }
+
+    .trust-tag {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #00ff88;
+      margin-bottom: 0.5rem;
+    }
+
+    .trust-card h3 {
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .trust-card p {
+      font-size: 0.75rem;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    footer {
+      border-top: 1px solid #222;
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: #444;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    footer a { color: #666; text-decoration: none; }
+    footer a:hover { color: #f5f5f5; }
+
+    /* Live market ticker */
+    #market-data {
+      font-size: 0.75rem;
+      color: #666;
+    }
+
+    #market-data span { margin-left: 1.5rem; }
+    #market-data .up { color: #00ff88; }
+    #market-data .down { color: #ff5f56; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Fin<span>Agent</span></div>
+    <div id="market-data">loading market data…</div>
+    <a href="http://localhost:4000/docs" target="_blank">Docs</a>
+    <a href="https://github.com/ortegarod/finagent" target="_blank">GitHub →</a>
+  </nav>
+
+  <div class="hero">
+    <div class="badge">AI Trading Agents Hackathon — lablab.ai 2026</div>
+    <h1>The <span class="accent">trustless</span> standard<br/>for AI financial agents.</h1>
+    <p class="subtitle">
+      Ask your agent anything. In under 2 minutes it pulls live market data,
+      analyzes your position, and gives you a clear answer —
+      then executes with on-chain proof. No human advisor comes close.
+    </p>
+    <div class="cta-row">
+      <a href="https://github.com/ortegarod/finagent/blob/main/SKILL.md" class="btn btn-primary" target="_blank">Connect your agent →</a>
+      <a href="https://github.com/ortegarod/finagent" class="btn btn-ghost" target="_blank">View on GitHub</a>
+      <a href="#how" class="btn btn-ghost">How it works</a>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:0.75rem; background:#111; border:1px solid #222; border-radius:4px; padding:0.6rem 1rem; font-size:0.78rem; max-width:520px;">
+      <span style="color:#666; user-select:none;">$</span>
+      <code id="skill-cmd" style="flex:1; color:#aaa; letter-spacing:0.3px;">curl https://raw.githubusercontent.com/ortegarod/finagent/main/SKILL.md</code>
+      <button onclick="navigator.clipboard.writeText('curl https://raw.githubusercontent.com/ortegarod/finagent/main/SKILL.md').then(()=>{this.textContent='copied';setTimeout(()=>this.textContent='copy',1500)})" style="background:none; border:1px solid #333; color:#666; font-family:inherit; font-size:0.65rem; padding:0.2rem 0.6rem; border-radius:2px; cursor:pointer; letter-spacing:1px; text-transform:uppercase; transition:all 0.2s;" onmouseover="this.style.borderColor='#666';this.style.color='#aaa'" onmouseout="this.style.borderColor='#333';this.style.color='#666'">copy</button>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+        <div class="terminal-title">finagent — agent session</div>
+      </div>
+      <div class="terminal-body" id="terminal-output">
+        <div><span class="t-prompt">you → agent</span> <span class="t-cmd">I have $15k. I want to invest in Tesla. What do you think?</span></div>
+        <div class="t-out">Pulling TSLAx data from Kraken…</div>
+        <div class="t-out">TSLAx/USD σ position: <span class="t-val">-0.8</span> — near fair value, decent entry window</div>
+        <div class="t-out">Broader market Fear & Greed: <span class="t-warn">49</span> — neutral, no euphoria risk</div>
+        <div class="t-out">Funding rates: flat across venues — no crowded long positions</div>
+        <div class="t-out">Earnings: next report ~6 weeks out, low event risk near-term</div>
+        <div class="t-out">Portfolio context: 0% equity exposure currently — TSLAx adds diversification</div>
+        <div><span class="t-prompt">agent → you</span> <span class="t-cmd">Market looks reasonable. I'd suggest $3k — meaningful exposure without overweighting one name. Want me to execute?</span></div>
+        <div style="margin-top:0.5rem"><span class="t-prompt">you → agent</span> <span class="t-cmd">Yeah, do it.</span></div>
+        <div class="t-out">Signing trade intent via EIP-712 (chain: Base, EIP-155)…</div>
+        <div class="t-out">Submitting to Risk Router — limits verified ✓</div>
+        <div class="t-out">Executing: <span class="t-val">kraken order buy TSLAx/USD 12.4 --type market --asset-class tokenized_asset</span></div>
+        <div class="t-out">✓ Filled: <span class="t-val">$3,000 @ $241.80</span> — on-chain proof: 0x4a2f… <span class="t-cursor"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Built with -->
+  <div class="section" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <div class="section-label">Built with</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: #222; border: 1px solid #222; margin-top: 1.5rem;">
+      <div style="background:#0f0f0f; padding:1.2rem 1.5rem;">
+        <div style="font-size:0.65rem; color:#666; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.3rem;">Execution</div>
+        <div style="font-size:0.9rem; color:#f5f5f5;">Kraken CLI</div>
+      </div>
+      <div style="background:#0f0f0f; padding:1.2rem 1.5rem;">
+        <div style="font-size:0.65rem; color:#666; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.3rem;">Market Data</div>
+        <div style="font-size:0.9rem; color:#f5f5f5;">PRISM API</div>
+      </div>
+      <div style="background:#0f0f0f; padding:1.2rem 1.5rem;">
+        <div style="font-size:0.65rem; color:#666; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.3rem;">Agent Identity</div>
+        <div style="font-size:0.9rem; color:#f5f5f5;">ERC-8004</div>
+      </div>
+      <div style="background:#0f0f0f; padding:1.2rem 1.5rem;">
+        <div style="font-size:0.65rem; color:#666; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.3rem;">Trade Signing</div>
+        <div style="font-size:0.9rem; color:#f5f5f5;">EIP-712</div>
+      </div>
+      <div style="background:#0f0f0f; padding:1.2rem 1.5rem;">
+        <div style="font-size:0.65rem; color:#666; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.3rem;">Runtime</div>
+        <div style="font-size:0.9rem; color:#00ff88;">OpenClaw</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="how">
+    <div class="section-label">How it works</div>
+    <h2>Talk to your agent. It does the rest.</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h3>Tell your agent what you want</h3>
+          <p>Natural language. "Build me a conservative portfolio." "Go 20% into BTC when it hits fair value." No dashboards to click, no forms to fill.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h3>Agent analyzes real market data</h3>
+          <p>VWAP + standard deviation bands from live Kraken OHLC. Fear & greed index. Cross-venue funding rates. No opinions — just statistics.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h3>Intents signed and routed through risk controls</h3>
+          <p>Every trade intent signed with EIP-712, chain-bound with EIP-155. Submitted to a Risk Router contract that enforces limits before any execution happens.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <h3>Execution logged on-chain</h3>
+          <p>Kraken CLI executes the trade. The outcome is recorded in an ERC-8004 Reputation Registry. Immutable. Auditable. No trust required.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <h3>You watch. Your dashboard updates.</h3>
+          <p>Live portfolio view, P&L, trade history, and on-chain proof links. You see exactly what your agent did and why.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Relatable story -->
+  <div class="section" style="border-top: 1px solid #222; padding-top: 4rem;">
+    <div class="section-label">Sound familiar?</div>
+    <h2>You're not the problem.<br/>You just never had the right advisor.</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+      <div style="padding: 1.5rem; border: 1px solid #222; border-radius: 4px;">
+        <div style="color: #666; font-size: 0.8rem; margin-bottom: 1rem; line-height: 1.8; font-style: italic;">
+          "My stocks are crashing, I'm watching every tick, I don't know what to do—"
+        </div>
+        <div style="color: #aaa; font-size: 0.8rem; line-height: 1.7; margin-bottom: 1rem;">
+          A friend who knows markets would say: <span style="color: #f5f5f5;">don't get emotional, don't watch every tick, look at the trends.</span> Most people don't have that friend. Financial media tells you what happened. It doesn't tell you what to do about it.
+        </div>
+        <div style="font-size: 0.7rem; color: #444;">— Every retail investor, ever</div>
+      </div>
+      <div style="padding: 1.5rem; border: 1px solid #222; border-radius: 4px; display: flex; flex-direction: column; gap: 0.8rem;">
+        <div style="font-size: 0.8rem; color: #f5f5f5; line-height: 1.7; font-weight: 600;">Your AI agent is that friend.</div>
+        <div style="font-size: 0.8rem; color: #aaa; line-height: 1.7;">No hype. No agenda. Not trying to sell you anything. It looks at the data, tells you where you actually stand, and gives you a clear answer — not a hot take.</div>
+        <div style="font-size: 0.8rem; color: #aaa; line-height: 1.7;">Learning to trade well takes years. Your agent already has that knowledge. It just needs your goals and access to execute.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The honest truth -->
+  <div class="section" style="border-top: 1px solid #222; padding-top: 4rem;">
+    <div class="section-label">The honest truth</div>
+    <h2>Nobody predicts the market.<br/>The edge is synthesis.</h2>
+    <div style="max-width: 680px; margin-top: 1.5rem;">
+      <p style="color: #aaa; font-size: 0.85rem; line-height: 1.8; margin-bottom: 1rem;">
+        Every strategy on Wall Street is a derivative of someone else's. No magic formula exists. Unless you have insider information — which is illegal — you're working with the same data as everyone else.
+      </p>
+      <p style="color: #aaa; font-size: 0.85rem; line-height: 1.8; margin-bottom: 1rem;">
+        The edge is <span style="color: #f5f5f5;">synthesis</span> — pulling more data, processing it faster, removing emotion, making a sound call with what you know. That's what the best traders actually do. They're not smarter. They're more disciplined and better informed.
+      </p>
+      <p style="color: #aaa; font-size: 0.85rem; line-height: 1.8;">
+        Your agent does this in seconds. Live prices, VWAP analysis, sentiment, funding rates, your portfolio context — synthesized without hype, without gut feeling, without an agenda.
+      </p>
+    </div>
+  </div>
+
+  <!-- How does the agent know all this? -->
+  <div class="section" style="border-top: 1px solid #222; padding-top: 4rem;">
+    <div class="section-label">Under the hood</div>
+    <h2>"How does my agent know<br/>all this stuff?"</h2>
+    <div style="max-width: 680px; margin-top: 1.5rem; margin-bottom: 2rem;">
+      <p style="color: #aaa; font-size: 0.85rem; line-height: 1.8;">
+        Kraken ships a library of 50+ strategy skill files written specifically for AI agents. DCA, grid trading, TWAP execution, funding carry, rebalancing, risk management, morning market briefs — every major approach, documented in a format your agent can read and apply at runtime. Combined with your personal context, it picks the right strategy for your situation.
+      </p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1px; background: #222; border: 1px solid #222;">
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666;">DCA Strategy</div>
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666;">Grid Trading</div>
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666;">TWAP Execution</div>
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666;">Funding Carry</div>
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666;">Futures Hedging</div>
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666;">Rebalancing</div>
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666;">Stop / Take-Profit</div>
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666;">Risk Management</div>
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666;">Earn / Staking</div>
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666;">Market Intelligence</div>
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666;">Liquidation Guard</div>
+      <div style="background: #0f0f0f; padding: 1rem; font-size: 0.72rem; color: #666; color: #00ff88;">+ 39 more</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">The Trust Stack</div>
+    <h2>Verifiable by construction.</h2>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="trust-tag">ERC-8004</div>
+        <h3>Agent Identity</h3>
+        <p>Who is this agent? On-chain identity registry. Minted NFT. Auditable history.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-tag">EIP-712</div>
+        <h3>Signed Intents</h3>
+        <p>What is it trying to do? Every trade intent typed, structured, and cryptographically signed before execution.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-tag">EIP-155</div>
+        <h3>Chain Binding</h3>
+        <p>Locked to Base. Signed intents can't be replayed on other chains.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-tag">Risk Router</div>
+        <h3>Enforced Limits</h3>
+        <p>Position size, leverage, daily loss limits — enforced at the contract level. Not self-reported.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-tag">ERC-8004</div>
+        <h3>Reputation Registry</h3>
+        <p>Immutable track record. PnL, Sharpe ratio, drawdown — all on-chain. Prove it before you trust it.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-tag">Kraken CLI</div>
+        <h3>Real Execution</h3>
+        <p>Crypto, tokenized stocks, forex, derivatives. One AI-native interface. No fake data.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agentic future quote -->
+  <div style="border-top: 1px solid #222; padding: 3rem; text-align: center;">
+    <div style="font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #444; margin-bottom: 1.2rem;">The future is agentic</div>
+    <blockquote style="font-size: 1rem; color: #666; font-style: italic; max-width: 640px; margin: 0 auto; line-height: 1.8;">
+      "The next evolution of financial infrastructure won't be driven by humans clicking buttons. It will be driven by <span style="color: #f5f5f5;">autonomous AI agents.</span>"
+    </blockquote>
+    <div style="font-size: 0.7rem; color: #333; margin-top: 1rem;">— Kraken, March 2026</div>
+  </div>
+
+  <footer>
+    <div>Built at AI Trading Agents Hackathon — lablab.ai × Kraken × Surge</div>
+    <div>
+      <a href="https://github.com/ortegarod/finagent" target="_blank">GitHub</a>
+      <a href="https://early.surge.xyz" target="_blank" style="margin-left:1.5rem">Surge</a>
+    </div>
+  </footer>
+
+  <script>
+    // Live market data from Kraken public API
+    async function fetchMarketData() {
+      try {
+        const res = await fetch('https://api.kraken.com/0/public/Ticker?pair=XBTUSD,ETHUSD');
+        const data = await res.json();
+        const btc = parseFloat(data.result?.XXBTZUSD?.c?.[0]);
+        const eth = parseFloat(data.result?.XETHZUSD?.c?.[0]);
+        const el = document.getElementById('market-data');
+        if (btc && eth) {
+          el.innerHTML = `
+            <span>BTC <span class="up">$${btc.toLocaleString('en-US', {maximumFractionDigits: 0})}</span></span>
+            <span>ETH <span class="up">$${eth.toLocaleString('en-US', {maximumFractionDigits: 0})}</span></span>
+          `;
+        }
+      } catch(e) {
+        document.getElementById('market-data').textContent = '';
+      }
+    }
+    fetchMarketData();
+    setInterval(fetchMarketData, 30000);
+  </script>
+
+</body>
+</html>
