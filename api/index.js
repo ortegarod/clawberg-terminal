@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 const prism = require('./prism');
+const erc8004 = require('./erc8004');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -335,6 +336,88 @@ app.get('/market/overview', async (req, res) => {
   } catch (err) {
     console.error('Error fetching market overview:', err);
     res.status(502).json({ error: 'Market overview unavailable', detail: err.message });
+  }
+});
+
+// ============== ERC-8004 AGENT IDENTITY ==============
+
+// GET /agent - Agent registration JSON (ERC-8004 spec)
+app.get('/agent', (req, res) => {
+  res.json({
+    type: 'https://eips.ethereum.org/EIPS/eip-8004#registration-v1',
+    name: 'ClawBerg',
+    description: 'AI financial agent — VWAP-driven trading on Kraken with ERC-8004 identity and EIP-712 signed trade intents. Built for the AI Trading Agents Hackathon (lablab.ai × Kraken × Surge).',
+    image: 'https://basewhales.com/clawberg-logo.png',
+    services: [
+      { name: 'dashboard', endpoint: 'http://100.71.117.120:3000' },
+      { name: 'api', endpoint: 'http://100.71.117.120:4000' },
+      { name: 'docs', endpoint: 'http://100.71.117.120:3020' },
+    ],
+    x402Support: false,
+    active: true,
+    registrations: [{
+      agentId: erc8004.AGENT_ID,
+      agentRegistry: `eip155:${erc8004.DEPLOYED.chainId}:${erc8004.DEPLOYED.contracts.identityRegistry}`,
+    }],
+    supportedTrust: ['reputation', 'crypto-economic'],
+  });
+});
+
+// GET /agent/summary - Full on-chain identity + reputation + risk summary
+app.get('/agent/summary', async (req, res) => {
+  try {
+    const summary = await erc8004.getAgentSummary();
+    res.json(summary);
+  } catch (err) {
+    console.error('Error fetching agent summary:', err);
+    res.status(502).json({ error: 'Agent summary unavailable', detail: err.message });
+  }
+});
+
+// POST /intents - Sign a trade intent (EIP-712, off-chain, no gas)
+// Body: { pair, side, amountUsd, strategyRationale, signalData }
+app.post('/intents', async (req, res) => {
+  try {
+    const { pair, side, amountUsd, strategyRationale, signalData } = req.body;
+    if (!pair || !side || !amountUsd) {
+      return res.status(400).json({ error: 'Missing required fields: pair, side, amountUsd' });
+    }
+
+    const result = await erc8004.signTradeIntent({
+      pair,
+      side,
+      amountUsd,
+      strategyRationale: strategyRationale || {},
+      signalData: signalData || {},
+    });
+
+    res.status(201).json({
+      intentHash: result.intentHash,
+      signature: result.signature,
+      intent: result.intent,
+      agentId: erc8004.AGENT_ID,
+      network: erc8004.DEPLOYED.network,
+      contracts: erc8004.DEPLOYED.contracts,
+    });
+  } catch (err) {
+    console.error('Error signing intent:', err);
+    res.status(500).json({ error: 'Intent signing failed', detail: err.message });
+  }
+});
+
+// POST /intents/record - Record a signed intent on-chain (costs gas)
+// Body: { intent, signature }
+app.post('/intents/record', async (req, res) => {
+  try {
+    const { intent, signature } = req.body;
+    if (!intent || !signature) {
+      return res.status(400).json({ error: 'Missing required fields: intent, signature' });
+    }
+    const result = await erc8004.recordIntentOnChain({ intent, signature });
+    res.status(201).json(result);
+  } catch (err) {
+    console.error('Error recording intent on-chain:', err);
+    res.status(500).json({ error: 'On-chain recording failed', detail: err.message });
   }
 });
 

@@ -1,0 +1,20 @@
+{
+  "network": "base-sepolia",
+  "chainId": 84532,
+  "deployer": "0x90d9c75f3761c02Bf3d892A701846F6323e9112D",
+  "deployedAt": "2026-03-31",
+  "contracts": {
+    "identityRegistry": "0x4F5037a70eCD1B537Bb9486A13a533fdABB9739e",
+    "reputationRegistry": "0x6ba0fA62fD88ccA6be67dE4667ee959FCF563b98",
+    "validationRegistry": "0x9bD50d1c286Bcc665ebF584331B7B95088EF11bc",
+    "tradeIntent": "0x4c07b1932d5537BC53296156D1f896C303dA7a1E",
+    "riskManager": "0x05c56c53a5C3e2cdC2721D9E1F07e7ec6852f126"
+  },
+  "explorer": {
+    "identityRegistry": "https://sepolia.basescan.org/address/0x4F5037a70eCD1B537Bb9486A13a533fdABB9739e",
+    "reputationRegistry": "https://sepolia.basescan.org/address/0x6ba0fA62fD88ccA6be67dE4667ee959FCF563b98",
+    "validationRegistry": "https://sepolia.basescan.org/address/0x9bD50d1c286Bcc665ebF584331B7B95088EF11bc",
+    "tradeIntent": "https://sepolia.basescan.org/address/0x4c07b1932d5537BC53296156D1f896C303dA7a1E",
+    "riskManager": "https://sepolia.basescan.org/address/0x05c56c53a5C3e2cdC2721D9E1F07e7ec6852f126"
+  }
+}
