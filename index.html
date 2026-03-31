@@ -387,66 +387,156 @@
     </div>
   </div>
 
-  <!-- Swim with the Sharks -->
-  <div style="border-top: 1px solid #222; padding: 5rem 3rem;">
-    <div style="max-width: 900px; margin: 0 auto;">
-      <div style="font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: #00ff88; margin-bottom: 1rem;">The ocean</div>
-      <h2 style="font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 700; letter-spacing: -0.5px; margin-bottom: 0.75rem;">Swim with the sharks.</h2>
-      <p style="color: #666; font-size: 0.85rem; line-height: 1.7; max-width: 560px; margin-bottom: 3.5rem;">
-        Everyone starts as a shrimp. Most people stay crabs — sideways, reactive, claws out. FinPal is how you become a dolphin.
-      </p>
+  <!-- Swim with the Sharks — Ocean Scene -->
+  <div style="border-top: 1px solid #111; position: relative;">
+    <!-- Header -->
+    <div style="position: absolute; top: 2rem; left: 3rem; z-index: 10;">
+      <div style="font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: #00ff88; margin-bottom: 0.4rem;">The ocean</div>
+      <div style="font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; letter-spacing: -0.5px; color: #f5f5f5;">Swim with the sharks.</div>
+    </div>
 
-      <!-- Evolution track -->
-      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: #1a1a1a; border: 1px solid #1a1a1a; position: relative;">
+    <!-- Ocean -->
+    <div class="ocean-scene" id="ocean">
+      <!-- Light rays from surface -->
+      <div class="ray" style="left:18%; animation-delay:0s;"></div>
+      <div class="ray" style="left:38%; animation-delay:0.8s;"></div>
+      <div class="ray" style="left:58%; animation-delay:1.6s;"></div>
+      <div class="ray" style="left:75%; animation-delay:0.4s;"></div>
 
-        <!-- Shrimp -->
-        <div style="background: #0a0a0a; padding: 2rem 1.5rem; text-align: center; opacity: 0.5;">
-          <div style="font-size: 2.8rem; margin-bottom: 1rem;">🦐</div>
-          <div style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #444; margin-bottom: 0.4rem;">Shrimp</div>
-          <div style="font-size: 0.72rem; color: #444; line-height: 1.6;">"What even is a portfolio?"</div>
-          <div style="margin-top: 1rem; font-size: 0.65rem; color: #333; font-style: italic;">$0–$1k</div>
-        </div>
+      <!-- Bubbles -->
+      <div class="bubble" style="left:12%; animation-duration:6s; animation-delay:0s; width:4px; height:4px;"></div>
+      <div class="bubble" style="left:28%; animation-duration:8s; animation-delay:2s; width:3px; height:3px;"></div>
+      <div class="bubble" style="left:55%; animation-duration:7s; animation-delay:1s; width:5px; height:5px;"></div>
+      <div class="bubble" style="left:72%; animation-duration:9s; animation-delay:3s; width:3px; height:3px;"></div>
+      <div class="bubble" style="left:88%; animation-duration:6s; animation-delay:1.5s; width:4px; height:4px;"></div>
 
-        <!-- Crab -->
-        <div style="background: #0a0a0a; padding: 2rem 1.5rem; text-align: center; opacity: 0.65;">
-          <div style="font-size: 2.8rem; margin-bottom: 1rem;">🦀</div>
-          <div style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #555; margin-bottom: 0.4rem;">Crab</div>
-          <div style="font-size: 0.72rem; color: #555; line-height: 1.6;">Moves sideways. Buys tops. Has opinions.</div>
-          <div style="margin-top: 1rem; font-size: 0.65rem; color: #333; font-style: italic;">Most people</div>
-        </div>
+      <!-- Surface wave SVG -->
+      <svg viewBox="0 0 1200 60" preserveAspectRatio="none"
+           style="position:absolute; top:0; left:0; width:100%; height:60px; z-index:3;">
+        <path d="M0,30 C150,0 300,60 450,30 C600,0 750,60 900,30 C1050,0 1150,50 1200,30 L1200,0 L0,0 Z"
+              fill="#0f0f0f"/>
+        <path d="M0,40 C200,10 350,55 550,35 C750,15 900,55 1100,30 L1200,30 L1200,0 L0,0 Z"
+              fill="#0f0f0f" opacity="0.5"/>
+      </svg>
 
-        <!-- Dolphin — YOU ARE HERE -->
-        <div style="background: #0a1a0f; padding: 2rem 1.5rem; text-align: center; border: 1px solid #00ff8844; box-shadow: 0 0 30px #00ff8811; position: relative; margin: -1px;">
-          <div style="position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: #00ff88; color: #0a0a0a; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; padding: 0.2rem 0.8rem; font-weight: 700;">You, with FinPal</div>
-          <div style="font-size: 2.8rem; margin-bottom: 1rem; margin-top: 0.5rem;">🐬</div>
-          <div style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #00ff88; margin-bottom: 0.4rem;">Dolphin</div>
-          <div style="font-size: 0.72rem; color: #aaa; line-height: 1.6;">Smart. Fast. Data-driven. Knows when to move and when to wait.</div>
-          <div style="margin-top: 1rem; font-size: 0.65rem; color: #00ff88; font-style: italic;">Who you aspire to be</div>
-        </div>
-
-        <!-- Shark -->
-        <div style="background: #0a0a0a; padding: 2rem 1.5rem; text-align: center; opacity: 0.8;">
-          <div style="font-size: 2.8rem; margin-bottom: 1rem;">🦈</div>
-          <div style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 0.4rem;">Shark</div>
-          <div style="font-size: 0.72rem; color: #666; line-height: 1.6;">Eats crabs for breakfast. Has a strategy. Consistent.</div>
-          <div style="margin-top: 1rem; font-size: 0.65rem; color: #555; font-style: italic;">You can get here</div>
-        </div>
-
-        <!-- Whale -->
-        <div style="background: #0a0a0a; padding: 2rem 1.5rem; text-align: center; opacity: 0.3;">
-          <div style="font-size: 2.8rem; margin-bottom: 1rem; filter: grayscale(1);">🐋</div>
-          <div style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #333; margin-bottom: 0.4rem;">Whale</div>
-          <div style="font-size: 0.72rem; color: #333; line-height: 1.6;">Moves markets. Doesn't talk to you. Unreachable.</div>
-          <div style="margin-top: 1rem; font-size: 0.65rem; color: #2a2a2a; font-style: italic;">The unattainable</div>
-        </div>
-
+      <!-- Shrimp — shallow left, small, dim -->
+      <div class="creature" style="left:8%; top:22%; opacity:0.45; font-size:1.8rem;">
+        🦐
+        <div class="creature-label" style="color:#333;">shrimp</div>
       </div>
 
-      <div style="margin-top: 1.5rem; font-size: 0.72rem; color: #444; text-align: center; font-style: italic;">
-        The crabs have claws. They just point the wrong direction. 🦀
+      <!-- Crab — bottom left, on the seafloor -->
+      <div class="creature" style="left:22%; top:74%; opacity:0.5; font-size:2.2rem;">
+        🦀
+        <div class="creature-label" style="color:#555;">crab<br/><span style="font-size:0.55rem; color:#333; font-style:italic;">most people</span></div>
       </div>
+
+      <!-- Dolphin — near surface centre, glowing -->
+      <div class="creature dolphin-glow" style="left:44%; top:14%; font-size:3.2rem;">
+        🐬
+        <div class="creature-label" style="color:#00ff88;">dolphin
+          <div style="font-size:0.55rem; color:#00ff88; margin-top:0.2rem; font-weight:700; letter-spacing:1px;">YOU, WITH FINPAL</div>
+        </div>
+      </div>
+
+      <!-- Shark — mid depth right -->
+      <div class="creature" style="left:66%; top:42%; opacity:0.75; font-size:2.8rem;">
+        🦈
+        <div class="creature-label" style="color:#888;">shark</div>
+      </div>
+
+      <!-- Whale — deep, barely visible -->
+      <div class="creature" style="left:78%; top:72%; opacity:0.18; font-size:4rem; filter:grayscale(1);">
+        🐋
+        <div class="creature-label" style="color:#222; font-size:0.6rem; letter-spacing:1px;">whale<br/><span style="font-size:0.5rem; color:#1a1a1a; font-style:italic;">unreachable</span></div>
+      </div>
+
+      <!-- Depth markers -->
+      <div style="position:absolute; right:1.5rem; top:18%; font-size:0.6rem; color:#1a3a2a; letter-spacing:1px;">— surface</div>
+      <div style="position:absolute; right:1.5rem; top:45%; font-size:0.6rem; color:#152515; letter-spacing:1px;">— mid</div>
+      <div style="position:absolute; right:1.5rem; top:72%; font-size:0.6rem; color:#0f1a0f; letter-spacing:1px;">— deep</div>
     </div>
   </div>
+
+  <style>
+    .ocean-scene {
+      position: relative;
+      width: 100%;
+      height: 460px;
+      background: linear-gradient(
+        to bottom,
+        #0a1e30 0%,
+        #071525 25%,
+        #040e1a 55%,
+        #020810 78%,
+        #010508 100%
+      );
+      overflow: hidden;
+    }
+
+    .ray {
+      position: absolute;
+      top: 0;
+      width: 80px;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,200,120,0.04) 0%, transparent 60%);
+      transform: skewX(-8deg);
+      animation: ray-pulse 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes ray-pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: 0;
+      border-radius: 50%;
+      background: rgba(100,200,180,0.25);
+      animation: rise linear infinite;
+    }
+
+    @keyframes rise {
+      0%   { bottom: 0; opacity: 0.6; }
+      80%  { opacity: 0.3; }
+      100% { bottom: 100%; opacity: 0; }
+    }
+
+    .creature {
+      position: absolute;
+      text-align: center;
+      line-height: 1;
+      cursor: default;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .creature:hover { transform: scale(1.15); }
+
+    .creature-label {
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 0.4rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .dolphin-glow {
+      filter: drop-shadow(0 0 12px rgba(0,255,136,0.5));
+      animation: dolphin-bob 3s ease-in-out infinite;
+    }
+
+    @keyframes dolphin-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .dolphin-glow:hover {
+      filter: drop-shadow(0 0 20px rgba(0,255,136,0.8));
+      transform: translateY(-8px) scale(1.1);
+    }
+  </style>
 
   <!-- Built with -->
   <div class="section" style="padding-top: 2rem; padding-bottom: 2rem;">
