@@ -1,6 +1,6 @@
 # Architecture
 
-ClawBerg is a four-layer stack. Each layer does one thing.
+FinPal is a four-layer stack. Each layer does one thing.
 
 ## System Diagram
 
@@ -16,13 +16,13 @@ ClawBerg is a four-layer stack. Each layer does one thing.
 │    kraken paper/live order ...              │
 │                                             │
 │  Logging                                    │
-│    POST /actions  →  ClawBerg API           │
-│    POST /trades   →  ClawBerg API           │
-│    POST /portfolio→  ClawBerg API           │
+│    POST /actions  →  FinPal API           │
+│    POST /trades   →  FinPal API           │
+│    POST /portfolio→  FinPal API           │
 └───────────────────┬─────────────────────────┘
                     │ HTTP
          ┌──────────▼──────────┐
-         │   ClawBerg API      │  Port 4000 (Express)
+         │   FinPal API      │  Port 4000 (Express)
          │   /trades           │
          │   /actions          │
          │   /portfolio        │
@@ -68,7 +68,7 @@ Asset resolution and market-wide signals. Resolves natural language asset names 
 - **Base URL:** `https://strykr-prism.up.railway.app`
 - **Used for:** Fear & Greed index, asset name resolution, cross-venue prices
 
-### ClawBerg API (Express + PostgreSQL)
+### FinPal API (Express + PostgreSQL)
 
 The logging and state layer. The agent writes here; the dashboard reads from here.
 

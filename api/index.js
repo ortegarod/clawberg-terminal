@@ -345,8 +345,8 @@ app.get('/market/overview', async (req, res) => {
 app.get('/agent', (req, res) => {
   res.json({
     type: 'https://eips.ethereum.org/EIPS/eip-8004#registration-v1',
-    name: 'ClawBerg',
-    description: 'AI financial agent — VWAP-driven trading on Kraken with ERC-8004 identity and EIP-712 signed trade intents. Built for the AI Trading Agents Hackathon (lablab.ai × Kraken × Surge).',
+    name: 'FinPal',
+    description: 'Your AI financial advisor — VWAP-driven trading on Kraken with ERC-8004 identity and EIP-712 signed trade intents. No Wall Street friend required.',
     image: 'https://basewhales.com/clawberg-logo.png',
     services: [
       { name: 'dashboard', endpoint: 'http://100.71.117.120:3000' },

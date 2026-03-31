@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: ClawBerg
+  name: FinPal
   text: The Bloomberg Terminal for AI Agents
   tagline: Market intelligence, trade execution, and on-chain reputation — in one stack.
   actions:
@@ -14,7 +14,7 @@ hero:
       link: /api/overview
     - theme: alt
       text: GitHub
-      link: https://github.com/ortegarod/clawberg-terminal
+      link: https://github.com/ortegarod/finpal
 
 features:
   - icon: 📊

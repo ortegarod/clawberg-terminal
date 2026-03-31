@@ -1,8 +1,8 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'ClawBerg — AI Agent Financial Terminal',
-  description: 'Real-time dashboard for AI financial agent',
+  title: 'FinPal — AI Financial Advisor',
+  description: 'Real-time dashboard for your AI financial advisor',
 };
 
 export default function RootLayout({ children }) {
@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
         <nav className="border-b border-border px-6 py-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <a href="/" className="text-lg font-medium text-text hover:no-underline">
-              ClawBerg
+              🐬 FinPal
             </a>
             <div className="flex gap-6">
               <a href="/" className="text-muted hover:text-text transition-colors">

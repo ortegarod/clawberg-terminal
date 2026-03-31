@@ -1,6 +1,6 @@
 # Getting Started
 
-ClawBerg is a full-stack trading terminal for AI agents. This guide gets you from zero to a running local environment.
+FinPal is a full-stack trading terminal for AI agents. This guide gets you from zero to a running local environment.
 
 ## Prerequisites
 
@@ -23,8 +23,8 @@ No API keys needed for market data and paper trading.
 ## 2. Clone the Repo
 
 ```bash
-git clone https://github.com/ortegarod/clawberg-terminal
-cd clawberg-terminal
+git clone https://github.com/ortegarod/finpal
+cd finpal
 ```
 
 ## 3. Try the Market Analysis Scripts
@@ -62,7 +62,7 @@ cp .env.example .env
 Edit `.env`:
 
 ```ini
-DATABASE_URL=postgresql://user:password@localhost:5432/clawberg
+DATABASE_URL=postgresql://user:password@localhost:5432/finpal
 PORT=4000
 ```
 
@@ -106,7 +106,7 @@ Open `http://localhost:3000`.
        |
        ├─ ./vwap.sh, ./market-intel.sh   ← market signals
        ├─ kraken CLI                     ← trade execution
-       └─ ClawBerg API (:4000)           ← trade + portfolio logging
+       └─ FinPal API (:4000)           ← trade + portfolio logging
                 |
          [PostgreSQL]
                 |

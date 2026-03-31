@@ -1,6 +1,6 @@
 # Agent Workflow
 
-This page describes how an AI agent — running on OpenClaw or any compatible runtime — should use ClawBerg. The reasoning pipeline is adapted from [TradeMaster](https://github.com/TradeMaster-NTU/TradeMaster) (NTU, Apache 2.0), an open-source RL platform for quantitative trading. We borrowed their LLM reasoning architecture; we did not use their RL runtime.
+This page describes how an AI agent — running on OpenClaw or any compatible runtime — should use FinPal. The reasoning pipeline is adapted from [TradeMaster](https://github.com/TradeMaster-NTU/TradeMaster) (NTU, Apache 2.0), an open-source RL platform for quantitative trading. We borrowed their LLM reasoning architecture; we did not use their RL runtime.
 
 ## Overview
 
@@ -8,7 +8,7 @@ The agent does three things on every cycle:
 
 1. **Gather intelligence** — market data, σ position, sentiment
 2. **Reason** — reflect on past decisions, form a recommendation
-3. **Act and log** — execute, then record everything via the ClawBerg API
+3. **Act and log** — execute, then record everything via the FinPal API
 
 ## Reasoning Pipeline
 
@@ -137,7 +137,7 @@ Combine with Fear & Greed:
 
 ## Asset Classes
 
-ClawBerg supports all asset classes the Kraken CLI exposes:
+FinPal supports all asset classes the Kraken CLI exposes:
 
 | Class | Examples | Flag |
 |---|---|---|

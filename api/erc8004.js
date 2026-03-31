@@ -109,7 +109,7 @@ async function signTradeIntent({ pair, side, amountUsd, strategyRationale, signa
 
   // EIP-712 domain — matches the deployed contract
   const domain = {
-    name: 'ClawBerg',
+    name: 'FinPal',
     version: '1',
     chainId: DEPLOYED.chainId,
     verifyingContract: DEPLOYED.contracts.tradeIntent,
