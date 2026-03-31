@@ -6,7 +6,7 @@
 source $HOME/.cargo/env
 
 PAIR=${1:-BTC}
-PRISM="https://strykr-prism.up.railway.app"
+API="http://100.71.117.120:4000"
 
 # Kraken pair mapping
 case $PAIR in
@@ -17,11 +17,14 @@ esac
 
 echo "🔍 Fetching data for $PAIR..."
 
-# Run in parallel
+# Run in parallel — VWAP from Kraken, market data from ClawBerg API (backed by PRISM)
 VWAP_DATA=$(~/repos/financial-agent/vwap.sh $KRAKEN_PAIR 60 24 2>/dev/null)
-FEAR_GREED=$(curl -s "$PRISM/market/fear-greed" 2>/dev/null)
-PRISM_PRICE=$(curl -s "$PRISM/crypto/price/$PAIR" 2>/dev/null)
-FUNDING=$(curl -s "$PRISM/dex/$PAIR/funding/all" 2>/dev/null)
+SNAPSHOT=$(curl -s "$API/market/snapshot" 2>/dev/null)
+
+# Extract from snapshot
+FEAR_GREED=$(echo "$SNAPSHOT" | jq '.fear_greed')
+PRISM_PRICE=$(echo "$SNAPSHOT" | jq ".crypto.prices.$PAIR // empty")
+FUNDING=$(echo "$SNAPSHOT" | jq ".funding.$PAIR // empty")
 
 # Parse and combine
 echo ""
@@ -54,9 +57,10 @@ echo "$FEAR_GREED" | jq -r '"
   Fear & Greed: \(.value)/100 (\(.label))"'
 
 # Funding rates
-echo "$FUNDING" | jq -r '"
+echo "$FUNDING" | jq -r 'if .funding_rates then "
 💸 Cross-Venue Funding Rates
-  \(.funding_rates | to_entries | map("  \(.key): \(.value // "n/a")") | join("\n"))"'
+  \(.funding_rates | to_entries | map("  \(.key): \(.value // "n/a")") | join("\n"))" else "
+💸 Funding rates unavailable" end'
 
 # Final recommendation
 SIGMA=$(echo "$VWAP_DATA" | jq -r '.sigma_position')

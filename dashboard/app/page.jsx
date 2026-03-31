@@ -4,6 +4,87 @@ import { useState, useEffect } from 'react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
+function MarketTicker({ symbol, price, change, decimals = 2 }) {
+  const isPos = change >= 0;
+  const fmt = (v, d) =>
+    v == null ? '—' : new Intl.NumberFormat('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).format(v);
+  return (
+    <span className="flex items-baseline gap-1.5 whitespace-nowrap">
+      <span className="text-muted text-xs">{symbol}</span>
+      <span className="font-medium">${fmt(price, decimals)}</span>
+      <span className={`text-xs ${isPos ? 'text-positive' : 'text-negative'}`}>
+        {isPos ? '+' : ''}{change != null ? change.toFixed(2) : '—'}%
+      </span>
+    </span>
+  );
+}
+
+function FearGreedBadge({ value, label }) {
+  if (value == null) return null;
+  let color = '#888';
+  if (value <= 25) color = '#ff5f56';
+  else if (value <= 45) color = '#ff9f43';
+  else if (value <= 55) color = '#888';
+  else if (value <= 75) color = '#00d4aa';
+  else color = '#00ff88';
+  return (
+    <span className="flex items-baseline gap-1.5 whitespace-nowrap">
+      <span className="text-muted text-xs">F&amp;G</span>
+      <span className="font-medium" style={{ color }}>{value}</span>
+      <span className="text-xs text-muted">{label}</span>
+    </span>
+  );
+}
+
+function MarketBar({ market }) {
+  if (!market) {
+    return (
+      <div className="border border-border px-4 py-2 text-muted text-xs">
+        Fetching market data…
+      </div>
+    );
+  }
+
+  const crypto = market.crypto?.prices || {};
+  const stocks = market.stocks?.quotes || {};
+  const fg = market.fear_greed;
+  const updatedAt = market.timestamp ? new Date(market.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : null;
+
+  return (
+    <div className="border border-border px-4 py-2 flex items-center justify-between overflow-x-auto gap-6">
+      <div className="flex items-center gap-6 flex-wrap">
+        {/* Crypto */}
+        {['BTC', 'ETH', 'SOL'].map(sym => {
+          const d = crypto[sym];
+          return d?.price_usd != null
+            ? <MarketTicker key={sym} symbol={sym} price={d.price_usd} change={d.change_24h_pct} decimals={sym === 'BTC' ? 0 : 2} />
+            : null;
+        })}
+
+        {/* Divider */}
+        <span className="text-border">|</span>
+
+        {/* Fear & Greed */}
+        <FearGreedBadge value={fg?.value} label={fg?.label} />
+
+        {/* Divider */}
+        <span className="text-border">|</span>
+
+        {/* xStocks */}
+        {['NVDA', 'SPY', 'GLD'].map(sym => {
+          const d = stocks[sym];
+          return d?.price_usd != null
+            ? <MarketTicker key={sym} symbol={sym} price={d.price_usd} change={d.change} decimals={2} />
+            : null;
+        })}
+      </div>
+      {updatedAt && (
+        <span className="text-muted text-xs flex-shrink-0">Updated {updatedAt}</span>
+      )}
+    </div>
+  );
+}
+
 function formatUsd(value) {
   if (value === null || value === undefined) return '—';
   return new Intl.NumberFormat('en-US', {
@@ -74,6 +155,7 @@ export default function PortfolioPage() {
   const [portfolio, setPortfolio] = useState(null);
   const [trades, setTrades] = useState([]);
   const [actions, setActions] = useState([]);
+  const [market, setMarket] = useState(null);
   const [connected, setConnected] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -81,19 +163,22 @@ export default function PortfolioPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [portfolioRes, tradesRes, actionsRes] = await Promise.all([
+        const [portfolioRes, tradesRes, actionsRes, marketRes] = await Promise.all([
           fetch(`${API_URL}/portfolio`),
           fetch(`${API_URL}/trades?limit=10`),
           fetch(`${API_URL}/actions?limit=10`),
+          fetch(`${API_URL}/market/snapshot`),
         ]);
 
         const portfolioData = await portfolioRes.json();
         const tradesData = await tradesRes.json();
         const actionsData = await actionsRes.json();
+        const marketData = await marketRes.json();
 
         setPortfolio(portfolioData.portfolio);
         setTrades(tradesData.trades || []);
         setActions(actionsData.actions || []);
+        setMarket(marketData);
       } catch (err) {
         console.error('Failed to fetch data:', err);
       } finally {
@@ -102,6 +187,19 @@ export default function PortfolioPage() {
     }
 
     fetchData();
+
+    // Refresh market data every 60s (prices change; SSE covers the rest)
+    const marketInterval = setInterval(async () => {
+      try {
+        const res = await fetch(`${API_URL}/market/snapshot`);
+        const data = await res.json();
+        setMarket(data);
+      } catch (err) {
+        console.error('Market refresh failed:', err);
+      }
+    }, 60000);
+
+    return () => clearInterval(marketInterval);
   }, []);
 
   // SSE connection for real-time updates
@@ -125,6 +223,11 @@ export default function PortfolioPage() {
     eventSource.addEventListener('portfolio', (e) => {
       const portfolioData = JSON.parse(e.data);
       setPortfolio(portfolioData);
+    });
+
+    eventSource.addEventListener('market', (e) => {
+      const marketData = JSON.parse(e.data);
+      setMarket(marketData);
     });
 
     eventSource.onerror = () => {
@@ -168,6 +271,9 @@ export default function PortfolioPage() {
           <span className="text-sm text-muted">{connected ? 'Live' : 'Disconnected'}</span>
         </div>
       </div>
+
+      {/* Market Bar */}
+      <MarketBar market={market} />
 
       {/* Stats Row */}
       <div className="grid grid-cols-4 gap-4">
