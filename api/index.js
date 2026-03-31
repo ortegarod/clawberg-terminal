@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+const prism = require('./prism');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -227,6 +228,114 @@ app.get('/events', (req, res) => {
     clearInterval(heartbeat);
     sseClients.delete(res);
   });
+});
+
+// ============== MARKET DATA (via Strykr PRISM) ==============
+
+// GET /market/snapshot - Full ClawBerg market snapshot (crypto + stocks + F&G + funding)
+app.get('/market/snapshot', async (req, res) => {
+  try {
+    const snapshot = await prism.clawbergSnapshot();
+    broadcastEvent('market', snapshot);
+    res.json(snapshot);
+  } catch (err) {
+    console.error('Error fetching market snapshot:', err);
+    res.status(502).json({ error: 'Market data unavailable', detail: err.message });
+  }
+});
+
+// GET /market/fear-greed - Fear & Greed Index
+app.get('/market/fear-greed', async (req, res) => {
+  try {
+    const data = await prism.fearGreed();
+    res.json(data);
+  } catch (err) {
+    console.error('Error fetching fear/greed:', err);
+    res.status(502).json({ error: 'Fear & Greed unavailable', detail: err.message });
+  }
+});
+
+// GET /market/prices?symbols=BTC,ETH,SOL - Batch crypto prices
+app.get('/market/prices', async (req, res) => {
+  try {
+    const symbols = req.query.symbols
+      ? req.query.symbols.split(',').map(s => s.trim())
+      : ['BTC', 'ETH', 'SOL'];
+    const data = await prism.cryptoPrices(symbols);
+    res.json(data);
+  } catch (err) {
+    console.error('Error fetching crypto prices:', err);
+    res.status(502).json({ error: 'Crypto prices unavailable', detail: err.message });
+  }
+});
+
+// GET /market/price/:symbol - Single crypto price
+app.get('/market/price/:symbol', async (req, res) => {
+  try {
+    const data = await prism.cryptoPrice(req.params.symbol);
+    res.json(data);
+  } catch (err) {
+    console.error('Error fetching price:', err);
+    res.status(502).json({ error: 'Price unavailable', detail: err.message });
+  }
+});
+
+// GET /market/stocks?symbols=NVDA,SPY,GLD - Batch stock/xStock quotes
+app.get('/market/stocks', async (req, res) => {
+  try {
+    const symbols = req.query.symbols
+      ? req.query.symbols.split(',').map(s => s.trim())
+      : ['NVDA', 'SPY', 'GLD'];
+    const data = await prism.stockQuotes(symbols);
+    res.json(data);
+  } catch (err) {
+    console.error('Error fetching stock quotes:', err);
+    res.status(502).json({ error: 'Stock quotes unavailable', detail: err.message });
+  }
+});
+
+// GET /market/funding/:symbol - Cross-venue funding rates (carry strategy)
+app.get('/market/funding/:symbol', async (req, res) => {
+  try {
+    const data = await prism.fundingRates(req.params.symbol);
+    res.json(data);
+  } catch (err) {
+    console.error('Error fetching funding rates:', err);
+    res.status(502).json({ error: 'Funding rates unavailable', detail: err.message });
+  }
+});
+
+// GET /market/oi/:symbol - Cross-venue open interest
+app.get('/market/oi/:symbol', async (req, res) => {
+  try {
+    const data = await prism.openInterest(req.params.symbol);
+    res.json(data);
+  } catch (err) {
+    console.error('Error fetching open interest:', err);
+    res.status(502).json({ error: 'Open interest unavailable', detail: err.message });
+  }
+});
+
+// GET /market/trending - Trending crypto
+app.get('/market/trending', async (req, res) => {
+  try {
+    const data = await prism.trending();
+    res.json(data);
+  } catch (err) {
+    console.error('Error fetching trending:', err);
+    res.status(502).json({ error: 'Trending unavailable', detail: err.message });
+  }
+});
+
+// GET /market/overview - Full TradFi + crypto market overview
+app.get('/market/overview', async (req, res) => {
+  try {
+    const data = await prism.marketOverview();
+    res.json(data);
+  } catch (err) {
+    console.error('Error fetching market overview:', err);
+    res.status(502).json({ error: 'Market overview unavailable', detail: err.message });
+  }
 });
 
 // Health check
